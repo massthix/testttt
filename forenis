@@ -66,13 +66,13 @@ local MiscSection = MiscTab:CreateSection("Misc")
     local Button = MiscTab:CreateButton({
    Name = "StackX",
    Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/massthix/refs/heads/main/massthix", true))()
+   loadstring(game:HttpGet("", true))()
    end,
 })
     local Button = MiscTab:CreateButton({
    Name = "No Lag STATS",
    Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/fdgbwerh/refs/heads/main/asdasdasd", true))()
+   loadstring(game:HttpGet("", true))()
    end,
 })
     local Button = MiscTab:CreateButton({
@@ -84,7 +84,7 @@ local MiscSection = MiscTab:CreateSection("Misc")
     local Button = MiscTab:CreateButton({
    Name = "AutoRespawn",
    Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/autorespawnenis", true))()
+   loadstring(game:HttpGet("", true))()
    end,
 })
 local Dropdown = MainTab:CreateDropdown({
