@@ -18,7 +18,7 @@ end)
 local function onCharacterAdded(character)
     local humanoid = character:WaitForChild("Humanoid")
     humanoid.Died:Connect(function()
-        wait(5)
+        wait(3)
         local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
         if remoteEvent then
             remoteEvent:FireServer({[1] = "Respawn"})
