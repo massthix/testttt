@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "LU4DEV Script",
+   Name = "LU4DEV for Enis",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "LU4DEV Script",
    LoadingSubtitle = "by LU4DEV👑",
@@ -40,39 +40,21 @@ local MainSection = MainTab:CreateSection("Main")
 local MiscSection = MiscTab:CreateSection("Misc")
 
     local Button = MainTab:CreateButton({
-   Name = "Fist",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/asdasdasd/refs/heads/main/ASDASD", true))()
-   end,
-})
-    local Button = MainTab:CreateButton({
-   Name = "Body",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/asdasdasd/refs/heads/main/ASDASDFEGHWER", true))()
-   end,
-})
-    local Button = MainTab:CreateButton({
    Name = "MS/JF",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/massthix/refs/heads/main/speed", true))()
    end,
 })
     local Button = MiscTab:CreateButton({
-   Name = "AutoDeathRun",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/spts", true))()
-   end,
-})
-    local Button = MiscTab:CreateButton({
    Name = "StackX",
    Callback = function()
-   loadstring(game:HttpGet("", true))()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/massthix/refs/heads/main/enishiztest", true))()
    end,
 })
     local Button = MiscTab:CreateButton({
    Name = "No Lag STATS",
    Callback = function()
-   loadstring(game:HttpGet("", true))()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/fdgbwerh/refs/heads/main/enishiztest", true))()
    end,
 })
     local Button = MiscTab:CreateButton({
@@ -84,64 +66,6 @@ local MiscSection = MiscTab:CreateSection("Misc")
     local Button = MiscTab:CreateButton({
    Name = "AutoRespawn",
    Callback = function()
-   loadstring(game:HttpGet("", true))()
-   end,
-})
-local Dropdown = MainTab:CreateDropdown({
-   Name = "Fist",
-   Options = {"1.8Qid", "3Qad ", "4Td","11Dd"},
-   CurrentOption = {""}, -- Başlangıçta seçili olan seçenek
-   MultipleOptions = false, -- Birden fazla seçeneği aynı anda seçebilmek için
-   Flag = "Dropdown1",
-   Callback = function(Options)
-       -- Seçili tüm seçenekleri ekrana yazdır (debug amaçlı)
-       print("Seçili seçenekler: ", table.concat(Options, ", "))
-
-       -- Eğer "Fist100Td" seçildiyse ilk scripti çalıştır
-       if table.find(Options, "1.8Qid") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/fs20", true))()
-       end
-
-       -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "3Qad") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/FS19", true))()
-       end
-                   -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "4Td") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/FS18", true))()
-       end
-                   -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "11Dd") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/FS17", true))()
-       end
-   end,
-})
-local Dropdown = MainTab:CreateDropdown({
-   Name = "Body",
-   Options = {"250Qid", "2Qid", "15Qad", "100Td"},
-   CurrentOption = {""}, -- Başlangıçta seçili olan seçenek
-   MultipleOptions = false, -- Birden fazla seçeneği aynı anda seçebilmek için
-   Flag = "Dropdown1",
-   Callback = function(Options)
-       -- Seçili tüm seçenekleri ekrana yazdır (debug amaçlı)
-       print("Seçili seçenekler: ", table.concat(Options, ", "))
-
-       -- Eğer "Fist100Td" seçildiyse ilk scripti çalıştır
-       if table.find(Options, "250Qid") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/BT28", true))()
-       end
-
-       -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "2Qid") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/BT27", true))()
-       end
-                   -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "15Qad") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/BT26", true))()
-       end
-                   -- Eğer "Fist1000Td" seçildiyse ikinci scripti çalıştır
-       if table.find(Options, "100Td") then
-           loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/BT25", true))()
-       end
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/enishiztest", true))()
    end,
 })
