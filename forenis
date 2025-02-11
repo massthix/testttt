@@ -88,11 +88,38 @@ local MiscSection = MiscTab:CreateSection("Misc")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/AFK", true))()
    end,
 })
-    local Button = MiscTab:CreateButton({
-   Name = "AutoRespawn",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/massthix/testttt/refs/heads/main/autorespawnenis", true))()
-   end,
+local player = game.Players.LocalPlayer
+local autodeathEnabled = false
+local deathLoop
+
+local Toggle = Tab:CreateToggle({
+    Name = "Auto Death Toggle",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autodeathEnabled = Value
+        
+        if autodeathEnabled then
+            -- Ölme döngüsünü başlat
+            deathLoop = task.spawn(function()
+                while autodeathEnabled do
+                    if player.Character then
+                        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            humanoid.Health = 0
+                        end
+                        player.CharacterAdded:Wait()
+                    end
+                    wait(13)
+                end
+            end)
+        else
+            -- Döngüyü durdur
+            if deathLoop then
+                task.cancel(deathLoop)
+            end
+        end
+    end,
 })
 local Dropdown = MainTab:CreateDropdown({
    Name = "Fist",
