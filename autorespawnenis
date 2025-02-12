@@ -11,7 +11,7 @@ end
 spawn(function()
     while true do
         updateLastLocation()
-        wait(3)
+        wait(0)
     end
 end)
 
