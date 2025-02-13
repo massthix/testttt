@@ -18,16 +18,16 @@ end)
 local function onCharacterAdded(character)
     local humanoid = character:WaitForChild("Humanoid")
     humanoid.Died:Connect(function()
-        wait(0)
+        wait(5)
         local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
         if remoteEvent then
             remoteEvent:FireServer({[1] = "Respawn"})
         end
-        wait(0)
+        wait(1)
         game.Lighting.Blur.Enabled = false
         game.Players.LocalPlayer.PlayerGui.IntroGui.Enabled = false
         game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true
-        wait(0)
+        wait(5)
         repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         if deathreturnactive and lastlocation then
             player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
