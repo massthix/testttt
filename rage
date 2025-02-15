@@ -1,0 +1,9 @@
+--Attack spammer
+--Soul attack aura basically
+local remote = game:service('ReplicatedStorage'):WaitForChild("RemoteEvent")
+while wait() do
+for i,v in pairs(game.Players:GetPlayers()) do 
+remote:FireServer({[1] = "Skill_SoulAttack_Start", [2] = v})
+remote:FireServer({[1] = "Skill_SoulAttack_End"})
+end
+end
