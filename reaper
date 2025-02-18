@@ -1,0 +1,23 @@
+local remote = game:service('ReplicatedStorage'):WaitForChild("RemoteEvent")
+local Players = game.Players
+
+while true do
+    -- Hızlı spam için spawn ve pararel işlemlerle çok sayıda istek gönderiyoruz
+    for _, v in pairs(Players:GetPlayers()) do
+        -- 'Skill_SoulReap' için çok sayıda paralel işlem başlat
+        for i = 1, 500 do  -- 10, her oyuncu için kaç kez spam yapacağını belirler. Bu değeri daha da artırabilirsiniz.
+            spawn(function()
+                remote:FireServer({[1] = "Skill_SoulReap", [2] = v})
+            end)
+        end
+    end
+
+    -- 'Skill_SoulReap_end' için de aynı şekilde çok sayıda paralel işlem
+    for i = 1, 500 do  -- Burada da aynı şekilde spam sıklığını artırabilirsiniz
+        spawn(function()
+            remote:FireServer({[1] = "Skill_SoulReap_end"})
+        end)
+    end
+
+    wait(0)  -- Burada da bekleme süresi sıfır olacak, işlem sürekli hızlanır
+end
