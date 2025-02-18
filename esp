@@ -1,0 +1,61 @@
+local Players = game:GetService("Players")
+local Camera = game:GetService("Workspace").CurrentCamera
+
+-- Mesafeyi hesaplayan fonksiyon
+function getDistance(player)
+    local myCharacter = game.Players.LocalPlayer.Character
+    if myCharacter and myCharacter:FindFirstChild("HumanoidRootPart") then
+        return (myCharacter.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+    end
+    return 0
+end
+
+-- ESP'yi oluşturacak fonksiyon
+function createESP(player)
+    -- BillboardGui oluşturuluyor
+    local billboard = Instance.new("BillboardGui")
+    billboard.Parent = player.Character:WaitForChild("Head")
+    billboard.Adornee = player.Character:WaitForChild("Head")
+    billboard.Size = UDim2.new(0, 150, 0, 75)
+    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Karakterin üstüne yerleştirme
+    billboard.AlwaysOnTop = true -- Her zaman üstte görünmesi için
+
+    -- TextLabel oluşturuluyor
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = billboard
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.fromRGB(255, 0, 0) -- Kırmızı renk
+    textLabel.TextStrokeTransparency = 0.8 -- Kenarlık efekti
+    textLabel.Font = Enum.Font.GothamBold -- Daha büyük ve okunabilir bir font
+    textLabel.TextSize = 20 -- Yazı boyutu
+
+    -- Mesafeyi gösteren TextLabel
+    local distanceLabel = Instance.new("TextLabel")
+    distanceLabel.Parent = billboard
+    distanceLabel.Size = UDim2.new(1, 0, 0, 30)
+    distanceLabel.Position = UDim2.new(0, 0, 1, 0)
+    distanceLabel.BackgroundTransparency = 1
+    distanceLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- Beyaz renk
+    distanceLabel.TextStrokeTransparency = 0.8
+    distanceLabel.Font = Enum.Font.GothamBold
+    distanceLabel.TextSize = 14
+
+    -- Oyuncunun ismi ve mesafesi
+    textLabel.Text = player.Name
+    distanceLabel.Text = "Distance: " .. math.floor(getDistance(player)) .. "m"
+end
+
+-- Yeni oyuncu eklenince ESP'yi aktifleştir
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        createESP(player)
+    end)
+end)
+
+-- Zaten oyunda olan oyuncular için ESP'yi oluştur
+for _, player in ipairs(Players:GetPlayers()) do
+    if player.Character then
+        createESP(player)
+    end
+end
