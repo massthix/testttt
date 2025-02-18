@@ -1,12 +1,49 @@
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.8) ~  Much Love, Ferib 
+_G.cum = true
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemoteEvent = ReplicatedStorage.RemoteEvent
 
-]]--
+local function fireEvent(args)
+    RemoteEvent:FireServer(unpack(args))
+end
 
-local v0=string.char;local v1=string.byte;local v2=string.sub;local v3=bit32 or bit ;local v4=v3.bxor;local v5=table.concat;local v6=table.insert;local function v7(v9,v10) local v11={};for v14=1, #v9 do v6(v11,v0(v4(v1(v2(v9,v14,v14 + 1 )),v1(v2(v10,1 + (v14% #v10) ,1 + (v14% #v10) + 1 )))%256 ));end return v5(v11);end _G.cum=true;local v8={[1 + 0 ]={[1 + 0 ]=v7("\243\204\223\60","\126\177\163\187\69\134\219\167"),[1532 -(568 + 962) ]=v7("\1\194\46\220\174","\156\67\173\74\165")}};game:GetService(v7("\6\178\89\26\181\37\71\32\178\77\37\168\41\84\53\176\76","\38\84\215\41\118\220\70")).RemoteEvent:FireServer(unpack(v8));while _G.cum do local v12=0 -0 ;local v13;while true do if (v12==(4 -2)) then game:GetService(v7("\116\216\38\240\73\123\228\236\67\217\5\232\79\106\228\255\67","\152\38\189\86\156\32\24\133")).RemoteEvent:FireServer(unpack(v13));task.wait();break;end if ((1 + 0)==v12) then local v17=1954 -(508 + 1446) ;while true do if (v17==(0 + 0)) then wait(997.0001 -(915 + 82) );v13={[2 -1 ]={[1 + 0 ]=""}};v17=1 -0 ;end if (v17==1) then v12=1189 -(1069 + 118) ;break;end end end if (v12==(0 -0)) then v13={[1 -0 ]={[1]=v7("\27\52\22\64\170","\158\48\118\66\114")}};game:GetService(v7("\153\33\0\58\122\166\250\191\33\20\5\103\170\233\170\35\21","\155\203\68\112\86\19\197")).RemoteEvent:FireServer(unpack(v13));v12=1;end end end if (_G.cum==false) then local v15=0;local v16;while true do if (v15==(0 + 0)) then v16={[1]={[1 -0 ]="",[2 + 0 ]=""}};game:GetService(v7("\206\82\183\74\245\84\166\82\249\83\148\82\243\69\166\65\249","\38\156\55\199")).RemoteEvent:FireServer(unpack(v16));break;end end end
+-- Başlangıçta FireServer işlemi
+local args = {
+    [1] = {
+        [1] = "Body",
+        [2] = "Body2"
+    }
+}
+fireEvent(args)
+
+while _G.cum do
+    local args = {
+        [1] = {
+            [1] = "+BT24"
+        }
+    }
+    fireEvent(args)
+    
+    -- Daha hızlı ve sunucu dostu işlem için Heartbeat kullanımı
+    game:GetService("RunService").Heartbeat:Wait() -- Bu, çok daha hızlı çalışır ve sunucuyu etkilemez
+    
+    -- Boş parametre ile FireServer işlemi
+    args = {
+        [1] = {
+            [1] = ""
+        }
+    }
+    fireEvent(args)
+    
+    -- task.wait() ile işlemi hızlandırma
+    task.wait(0.001) -- Kısa bekleme süresi ile işlem hızlanır
+end
+
+if not _G.cum then
+    local args = {
+        [1] = {
+            [1] = "",
+            [2] = ""
+        }
+    }
+    fireEvent(args)
+end
