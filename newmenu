@@ -339,7 +339,7 @@ Light = {
     InputBackground = Color3.fromRGB(240, 240, 240),
     InputStroke = Color3.fromRGB(180, 180, 180),
     PlaceholderColor = Color3.fromRGB(140, 140, 140)
-}
+},
 
 local topbar = script.Parent.Topbar -- Topbar'ı burada doğru şekilde referans gösterdiğinizden emin olun
 
