@@ -21,7 +21,7 @@ local ConfigurationExtension = ".rfld"
 local settingsTable = {
 	General = {
 		-- if needs be in order just make getSetting(name)
-		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Rayfield Keybind'},
+		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Keybind'},
 		-- buildwarnings
 		-- rayfieldprompts
 
@@ -300,8 +300,11 @@ local RayfieldLibrary = {
 			PlaceholderColor = Color3.fromRGB(190, 150, 130)
 		},
 
-Light = {
-    TextColor = Color3.fromHSV(tick() % 5 / 5, 1, 1),  -- Rainbow effect for TextColor
+local RunService = game:GetService("RunService")
+
+-- Light tablosu (sabit tanım)
+local Light = {
+    TextColor = Color3.fromRGB(40, 40, 40), -- Başlangıç için sabit renk
 
     Background = Color3.fromRGB(245, 245, 245),
     Topbar = Color3.fromRGB(230, 230, 230),
@@ -340,7 +343,49 @@ Light = {
     InputBackground = Color3.fromRGB(240, 240, 240),
     InputStroke = Color3.fromRGB(180, 180, 180),
     PlaceholderColor = Color3.fromRGB(140, 140, 140)
-},
+}
+
+-- Buraya kadar sabit renkler tanımlı, bundan sonrası loop ve diğer işlemler için
+
+----------------------------------------------------------
+-- RAINBOW COLOR LOOP -- (Devamlı çalışan ve istediğin gibi geliştirilebilir)
+----------------------------------------------------------
+
+-- Buraya menüdeki yazılar veya butonları ekle
+local uiElements = {
+    script.Parent.TextLabel,  -- Örnek
+    script.Parent.Button,    -- Örnek
+    -- Devamında istediğin kadar UI ekleyebilirsin
+}
+
+-- RenderStepped ile sürekli rainbow efekti
+RunService.RenderStepped:Connect(function()
+    local hue = tick() % 5 / 5  -- 5 saniyelik döngü
+    local rainbowColor = Color3.fromHSV(hue, 1, 1)
+
+    -- Listedeki her elementin TextColor3'ünü güncelle
+    for _, element in pairs(uiElements) do
+        if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
+            element.TextColor3 = rainbowColor
+        end
+    end
+
+    -- İstersen Light tablosunun TextColor'unu da güncelleyebilirsin
+    Light.TextColor = rainbowColor
+end)
+
+----------------------------------------------------------
+-- BURADAN SONRA DEVAMI GELEBİLİR --
+----------------------------------------------------------
+
+-- Örnek devam:
+-- Menü açma/kapama kodları
+-- Buton fonksiyonları
+-- Slider işlemleri
+-- Toggle eventleri
+-- vb...
+
+
 
 
 		Amethyst = {
