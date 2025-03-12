@@ -300,10 +300,10 @@ local RayfieldLibrary = {
 			PlaceholderColor = Color3.fromRGB(190, 150, 130)
 		},
 Light = {
-    TextColor = Color3.fromRGB(40, 40, 40), -- Başlangıç için sabit renk
+    TextColor = Color3.fromRGB(40, 40, 40),
 
     Background = Color3.fromRGB(245, 245, 245),
-    Topbar = Color3.fromRGB(230, 230, 230),
+    Topbar = Color3.fromRGB(230, 230, 230), -- Başlangıç rengi burada belirleniyor
     Shadow = Color3.fromRGB(200, 200, 200),
 
     NotificationBackground = Color3.fromRGB(250, 250, 250),
@@ -341,90 +341,60 @@ Light = {
     PlaceholderColor = Color3.fromRGB(140, 140, 140)
 }
 
--- Buraya kadar sabit renkler tanımlı, bundan sonrası loop ve diğer işlemler için
+local topbar = script.Parent.Topbar -- Topbar'ı burada doğru şekilde referans gösterdiğinizden emin olun
 
-----------------------------------------------------------
--- RAINBOW COLOR LOOP -- (Devamlı çalışan ve istediğin gibi geliştirilebilir)
-----------------------------------------------------------
-
--- Buraya menüdeki yazılar veya butonları ekle
-local uiElements = {
-    script.Parent.TextLabel,  -- Örnek
-    script.Parent.Button,    -- Örnek
-    -- Devamında istediğin kadar UI ekleyebilirsin
-}
-
--- RenderStepped ile sürekli rainbow efekti
-RunService.RenderStepped:Connect(function()
-    local hue = tick() % 5 / 5  -- 5 saniyelik döngü
-    local rainbowColor = Color3.fromHSV(hue, 1, 1)
-
-    -- Listedeki her elementin TextColor3'ünü güncelle
-    for _, element in pairs(uiElements) do
-        if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
-            element.TextColor3 = rainbowColor
+local function rainbowTopbar()
+    while true do
+        for i = 0, 255, 5 do
+            topbar.BackgroundColor3 = Color3.fromHSV(i / 255, 1, 1)
+            wait(0.05)
         end
     end
+end
 
-    -- İstersen Light tablosunun TextColor'unu da güncelleyebilirsin
-    Light.TextColor = rainbowColor
-end)
+rainbowTopbar()
 
-----------------------------------------------------------
--- BURADAN SONRA DEVAMI GELEBİLİR --
-----------------------------------------------------------
+Amethyst = {
+    TextColor = Color3.fromRGB(240, 240, 240),
 
--- Örnek devam:
--- Menü açma/kapama kodları
--- Buton fonksiyonları
--- Slider işlemleri
--- Toggle eventleri
--- vb...
+    Background = Color3.fromRGB(30, 20, 40),
+    Topbar = Color3.fromRGB(40, 25, 50),
+    Shadow = Color3.fromRGB(20, 15, 30),
 
+    NotificationBackground = Color3.fromRGB(35, 20, 40),
+    NotificationActionsBackground = Color3.fromRGB(240, 240, 250),
 
+    TabBackground = Color3.fromRGB(60, 40, 80),
+    TabStroke = Color3.fromRGB(70, 45, 90),
+    TabBackgroundSelected = Color3.fromRGB(180, 140, 200),
+    TabTextColor = Color3.fromRGB(230, 230, 240),
+    SelectedTabTextColor = Color3.fromRGB(50, 20, 50),
 
+    ElementBackground = Color3.fromRGB(45, 30, 60),
+    ElementBackgroundHover = Color3.fromRGB(50, 35, 70),
+    SecondaryElementBackground = Color3.fromRGB(40, 30, 55),
+    ElementStroke = Color3.fromRGB(70, 50, 85),
+    SecondaryElementStroke = Color3.fromRGB(65, 45, 80),
 
-		Amethyst = {
-			TextColor = Color3.fromRGB(240, 240, 240),
+    SliderBackground = Color3.fromRGB(100, 60, 150),
+    SliderProgress = Color3.fromRGB(130, 80, 180),
+    SliderStroke = Color3.fromRGB(150, 100, 200),
 
-			Background = Color3.fromRGB(30, 20, 40),
-			Topbar = Color3.fromRGB(40, 25, 50),
-			Shadow = Color3.fromRGB(20, 15, 30),
+    ToggleBackground = Color3.fromRGB(45, 30, 55),
+    ToggleEnabled = Color3.fromRGB(120, 60, 150),
+    ToggleDisabled = Color3.fromRGB(94, 47, 117),
+    ToggleEnabledStroke = Color3.fromRGB(140, 80, 170),
+    ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
+    ToggleEnabledOuterStroke = Color3.fromRGB(90, 40, 120),
+    ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 110),
 
-			NotificationBackground = Color3.fromRGB(35, 20, 40),
-			NotificationActionsBackground = Color3.fromRGB(240, 240, 250),
+    DropdownSelected = Color3.fromRGB(50, 35, 70),
+    DropdownUnselected = Color3.fromRGB(35, 25, 50),
 
-			TabBackground = Color3.fromRGB(60, 40, 80),
-			TabStroke = Color3.fromRGB(70, 45, 90),
-			TabBackgroundSelected = Color3.fromRGB(180, 140, 200),
-			TabTextColor = Color3.fromRGB(230, 230, 240),
-			SelectedTabTextColor = Color3.fromRGB(50, 20, 50),
-
-			ElementBackground = Color3.fromRGB(45, 30, 60),
-			ElementBackgroundHover = Color3.fromRGB(50, 35, 70),
-			SecondaryElementBackground = Color3.fromRGB(40, 30, 55),
-			ElementStroke = Color3.fromRGB(70, 50, 85),
-			SecondaryElementStroke = Color3.fromRGB(65, 45, 80),
-
-			SliderBackground = Color3.fromRGB(100, 60, 150),
-			SliderProgress = Color3.fromRGB(130, 80, 180),
-			SliderStroke = Color3.fromRGB(150, 100, 200),
-
-			ToggleBackground = Color3.fromRGB(45, 30, 55),
-			ToggleEnabled = Color3.fromRGB(120, 60, 150),
-			ToggleDisabled = Color3.fromRGB(94, 47, 117),
-			ToggleEnabledStroke = Color3.fromRGB(140, 80, 170),
-			ToggleDisabledStroke = Color3.fromRGB(124, 71, 150),
-			ToggleEnabledOuterStroke = Color3.fromRGB(90, 40, 120),
-			ToggleDisabledOuterStroke = Color3.fromRGB(80, 50, 110),
-
-			DropdownSelected = Color3.fromRGB(50, 35, 70),
-			DropdownUnselected = Color3.fromRGB(35, 25, 50),
-
-			InputBackground = Color3.fromRGB(45, 30, 60),
-			InputStroke = Color3.fromRGB(80, 50, 110),
-			PlaceholderColor = Color3.fromRGB(178, 150, 200)
-		},
+    InputBackground = Color3.fromRGB(45, 30, 60),
+    InputStroke = Color3.fromRGB(80, 50, 110),
+    PlaceholderColor = Color3.fromRGB(178, 150, 200)
+},
 
 		Green = {
 			TextColor = Color3.fromRGB(30, 60, 30),
