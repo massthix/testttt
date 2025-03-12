@@ -299,20 +299,7 @@ local RayfieldLibrary = {
 			InputStroke = Color3.fromRGB(90, 65, 50),
 			PlaceholderColor = Color3.fromRGB(190, 150, 130)
 		},
-
-local RunService = game:GetService("RunService")
-
-local function UpdateRainbow()
-    local hue = tick() % 5 / 5
-    local rainbowColor = Color3.fromHSV(hue, 1, 1)
-    -- Buraya UI güncellemeleri
-end
-
-RunService.RenderStepped:Connect(UpdateRainbow)
-
-
--- Light tablosu (sabit tanım)
-local Light = {
+Light = {
     TextColor = Color3.fromRGB(40, 40, 40), -- Başlangıç için sabit renk
 
     Background = Color3.fromRGB(245, 245, 245),
