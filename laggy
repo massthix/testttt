@@ -1,23 +1,15 @@
+--local for remotes in spts
 local remote = game:service('ReplicatedStorage'):WaitForChild("RemoteEvent")
-local Players = game.Players
 
+--Hızlı SpherePunch spammer
 while true do
-    -- Hızlı spam için spawn ve pararel işlemlerle çok sayıda istek gönderiyoruz
-    for _, v in pairs(Players:GetPlayers()) do
-        -- 'Skill_SoulReap' için çok sayıda paralel işlem başlat
-        for i = 1, 500 do  -- 10, her oyuncu için kaç kez spam yapacağını belirler. Bu değeri daha da artırabilirsiniz.
-            spawn(function()
-                remote:FireServer({[1] = "Skill_SorcerersEye", [2] = v})
-            end)
+    game:GetService("RunService").Heartbeat:Wait()
+    for _, v in pairs(game.Players:GetPlayers()) do
+        if v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            -- Birden fazla SpherePunch'u hızlıca göndermek
+            for i = 1, 5 do -- Burada 5, aynı anda gönderilen SpherePunch sayısıdır. Daha fazla yapmak için artırabilirsiniz.
+                remote:FireServer({[1] = "Skill_SpherePunch", [2] = v.Character.HumanoidRootPart.Position})
+            end
         end
     end
-
-    -- 'Skill_SoulReap_end' için de aynı şekilde çok sayıda paralel işlem
-    for i = 1, 500 do  -- Burada da aynı şekilde spam sıklığını artırabilirsiniz
-        spawn(function()
-            remote:FireServer({[1] = "Skill_SorcerersEye_end"})
-        end)
-    end
-
-    wait(0)  -- Burada da bekleme süresi sıfır olacak, işlem sürekli hızlanır
 end
