@@ -17,6 +17,8 @@ end)
 
 local function onCharacterAdded(character)
     local humanoid = character:WaitForChild("Humanoid")
+    
+    -- Karakter her öldüğünde çalışacak olan olay
     humanoid.Died:Connect(function()
         wait(0.5)
         local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
@@ -28,15 +30,24 @@ local function onCharacterAdded(character)
         game.Players.LocalPlayer.PlayerGui.IntroGui.Enabled = false
         game.Players.LocalPlayer.PlayerGui.ScreenGui.Enabled = true
         wait(0.5)
+        
+        -- Yeni karakter doğduğunda bu kısımlar çalışacak
         repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
         if deathreturnactive and lastlocation then
+            -- Karakter 2 saniye sonra öldürülüyor
+            wait(2) -- 2 saniye bekle
+            humanoid.Health = 0 -- Karakteri öldür
+            -- Sonraki adımda, tekrar doğacak ve süreç devam edecek
             player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
         end
     end)
 end
 
+-- İlk karakter yüklendiğinde
 if player.Character then
     onCharacterAdded(player.Character)
 end
 
+-- Yeni karakter doğduğunda
 player.CharacterAdded:Connect(onCharacterAdded)
