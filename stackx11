@@ -62,11 +62,11 @@
             local function updateCounter(textLabel)
                 while deathreturnactive do
                     if not isPostTenSeconds then
-                        wait(1)
+                        wait(2)
                         counter = counter + 1
                         textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
                     else
-                        wait(1)
+                        wait(2)
                         local randomIncrement = math.random(1, 4) -- Düzeltildi
                         counter = counter + randomIncrement
                         textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
@@ -88,7 +88,7 @@
             local function onCharacterAdded(character)
                 local humanoid = character:WaitForChild("Humanoid")
                 humanoid.Died:Connect(function()
-                    wait(0.5)
+                    wait(1.5)
                     local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
                     if remoteEvent then
                         remoteEvent:FireServer({[1] = "Respawn"})
@@ -99,15 +99,15 @@
                     repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
                     if deathreturnactive and lastlocation then
                         while true do
-                            wait(2)
+                            wait(3)
                             if player.Character and player.Character:FindFirstChild("Humanoid") then
                                 local humanoid = player.Character:FindFirstChild("Humanoid")
                                 if humanoid and humanoid.Health > 0 then
                                     humanoid.Health = 0
                                 end
                             end
-                            wait(1)
-                            repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                            wait(2)
+                            repeat wait(0.5) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
                             if player.Character then
                                 player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
                             end
@@ -125,7 +125,7 @@
             spawn(function()
                 while true do
                     updateLastLocation()
-                    wait(5)
+                    wait(10)
                 end
             end)
 
