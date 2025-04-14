@@ -1,0 +1,136 @@
+if Value then
+                -- Statları göstermek için gerekli servisleri al
+                local Players = game:GetService("Players")
+                local LocalPlayer = Players.LocalPlayer
+                local PlayerStats = LocalPlayer.PrivateStats
+
+                -- Eğer ScreenGui oluşturulmadıysa, oluşturuyoruz
+                if not ScreenGui then
+                    ScreenGui = Instance.new("ScreenGui")
+                    ScreenGui.Parent = game.CoreGui
+
+                    -- Statları göstermek için bir Frame oluştur
+                    local StatsFrame = Instance.new("Frame")
+                    StatsFrame.Size = UDim2.new(0, 600, 0, 350)
+                    StatsFrame.Position = UDim2.new(0, 10, 0.5, -75) -- Sol orta
+                    StatsFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+                    StatsFrame.BackgroundTransparency = 1
+                    StatsFrame.Parent = ScreenGui
+
+                    -- Statları göstermek için TextLabel'lar oluştur
+                    local FistLabel = Instance.new("TextLabel")
+                    FistLabel.Size = UDim2.new(1, 0, 0, 30)
+                    FistLabel.Position = UDim2.new(0, 100, 0, 0)
+                    FistLabel.BackgroundTransparency = 1
+                    FistLabel.TextColor3 = Color3.new(0, 0, 139)
+                    FistLabel.TextSize = 25
+                    FistLabel.Font = Enum.Font.Sarpanch  -- Font değişikliği
+                    FistLabel.Parent = StatsFrame
+
+                    -- Diğer label'lar
+                    local BodyLabel = Instance.new("TextLabel")
+                    BodyLabel.Size = UDim2.new(1, 0, 0, 30)
+                    BodyLabel.Position = UDim2.new(0, 100, 0, 30)
+                    BodyLabel.BackgroundTransparency = 1
+                    BodyLabel.TextColor3 = Color3.new(0, 0, 139)
+                    BodyLabel.TextSize = 25
+                    BodyLabel.Font = Enum.Font.Sarpanch  -- Font değişikliği
+                    BodyLabel.Parent = StatsFrame
+
+                    local PsychicLabel = Instance.new("TextLabel")
+                    PsychicLabel.Size = UDim2.new(1, 0, 0, 30)
+                    PsychicLabel.Position = UDim2.new(0, 100, 0, 60)
+                    PsychicLabel.BackgroundTransparency = 1
+                    PsychicLabel.TextColor3 = Color3.new(0, 0, 139)
+                    PsychicLabel.TextSize = 25
+                    PsychicLabel.Font = Enum.Font.Sarpanch  -- Font değişikliği
+                    PsychicLabel.Parent = StatsFrame
+
+                    local SpeedLabel = Instance.new("TextLabel")
+                    SpeedLabel.Size = UDim2.new(1, 0, 0, 30)
+                    SpeedLabel.Position = UDim2.new(0, 100, 0, 90)
+                    SpeedLabel.BackgroundTransparency = 1
+                    SpeedLabel.TextColor3 = Color3.new(0, 0, 139)
+                    SpeedLabel.TextSize = 25
+                    SpeedLabel.Font = Enum.Font.Sarpanch  -- Font değişikliği
+                    SpeedLabel.Parent = StatsFrame
+
+                    local JumpLabel = Instance.new("TextLabel")
+                    JumpLabel.Size = UDim2.new(1, 0, 0, 30)
+                    JumpLabel.Position = UDim2.new(0, 100, 0, 120)
+                    JumpLabel.BackgroundTransparency = 1
+                    JumpLabel.TextColor3 = Color3.new(0, 0, 139)
+                    JumpLabel.TextSize = 25
+                    JumpLabel.Font = Enum.Font.Sarpanch  -- Font değişikliği
+                    JumpLabel.Parent = StatsFrame
+
+                    -- Gökkuşağı (Rainbow) rengi için animasyonu başlatıyoruz
+                    local function startRainbowAnimation(label)
+                        coroutine.wrap(function() -- Coroutine ile animasyonu paralel çalıştır
+                            while true do
+                                for i = 0, 1, 0.01 do
+                                    label.TextColor3 = Color3.fromHSV(i, 1, 1)  -- HSV ile renk geçişi
+                                    wait(0.001)
+                                end
+                            end
+                        end)() -- Coroutine başlat
+                    end
+
+                    -- Gökkuşağı animasyonlarını başlat
+                    startRainbowAnimation(FistLabel)
+                    startRainbowAnimation(BodyLabel)
+                    startRainbowAnimation(PsychicLabel)
+                    startRainbowAnimation(SpeedLabel)
+                    startRainbowAnimation(JumpLabel)
+
+                    -- Sayıları kısaltmak için fonksiyon
+                    function converttoletter(num)
+                        if num >= 1e21 then
+                            return string.format("%.2f Sx+", num / 1e21)
+                        elseif num >= 1e18 then
+                            return string.format("%.2f Qi", num / 1e18)
+                        elseif num >= 1e15 then
+                            return string.format("%.2f Qa", num / 1e15)
+                        elseif num >= 1e12 then
+                            return string.format("%.2f T", num / 1e12)
+                        elseif num >= 1e9 then
+                            return string.format("%.2f B", num / 1e9)
+                        elseif num >= 1e6 then
+                            return string.format("%.2f M", num / 1e6)
+                        elseif num >= 1e3 then
+                            return string.format("%.2f K", num / 1e3)
+                        else
+                            return tostring(num)
+                        end
+                    end
+
+                    -- Statları hızlı güncelleyen fonksiyon
+                    local function updateStats()
+                        local FistValue = PlayerStats.FistStrength.Value
+                        local BodyValue = PlayerStats.BodyToughness.Value
+                        local PsychicValue = PlayerStats.PsychicPower.Value
+                        local SpeedValue = PlayerStats.MovementSpeed.Value
+                        local JumpValue = PlayerStats.JumpForce.Value
+
+                        -- Statları hemen güncellemeye başla
+                        FistLabel.Text = "Fist: " .. converttoletter(FistValue)
+                        BodyLabel.Text = "Body: " .. converttoletter(BodyValue)
+                        PsychicLabel.Text = "Psychic: " .. converttoletter(PsychicValue)
+                        SpeedLabel.Text = "Speed: " .. converttoletter(SpeedValue)
+                        JumpLabel.Text = "Jump: " .. converttoletter(JumpValue)
+                    end
+
+                    -- Statları hızlı bir şekilde güncellemeye başla
+                    game:GetService("RunService").Heartbeat:Connect(function()
+                        updateStats()
+                    end)
+                end
+            else
+                -- Ekranı ve ScreenGui'yi kaldırarak kapat
+                if ScreenGui then
+                    ScreenGui:Destroy() -- ScreenGui'yi yok et
+                    ScreenGui = nil -- Referansı sıfırla
+                end
+                print("Closed Stats")
+            end
+        end,
