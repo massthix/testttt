@@ -1,0 +1,143 @@
+            local deathreturnactive = true -- Tekrar eden tanımlama kaldırıldı
+            local player = game:GetService("Players").LocalPlayer
+            local lastlocation = nil
+
+            local function getOrCreateScreenGui()
+                local screenGui = player.PlayerGui:FindFirstChild("StackXScreenGui")
+                if not screenGui then
+                    screenGui = Instance.new("ScreenGui")
+                    screenGui.Name = "StackXScreenGui"
+                    screenGui.Parent = player.PlayerGui
+                    screenGui.ResetOnSpawn = false
+                end
+                return screenGui
+            end
+
+            local function getOrCreateTextLabel(screenGui)
+                local textLabel = screenGui:FindFirstChild("StackXLabel")
+                if not textLabel then
+                    textLabel = Instance.new("TextLabel")
+                    textLabel.Name = "StackXLabel"
+                    textLabel.Parent = screenGui
+                    textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n0"
+                    textLabel.TextSize = 50
+                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    textLabel.BackgroundTransparency = 1
+                    textLabel.Position = UDim2.new(0.5, -200, 0.5, -50)
+                    textLabel.Size = UDim2.new(0, 400, 0, 200)
+                    textLabel.TextScaled = true
+                    textLabel.TextStrokeTransparency = 0.5
+                    textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                    textLabel.Font = Enum.Font.SourceSansBold
+                    
+                    local uiStroke = Instance.new("UIStroke")
+                    uiStroke.Thickness = 2
+                    uiStroke.Color = Color3.fromRGB(0, 0, 0)
+                    uiStroke.Transparency = 0.2
+                    uiStroke.Parent = textLabel
+                    
+                    local shadow = Instance.new("UIStroke")
+                    shadow.Thickness = 1
+                    shadow.Color = Color3.fromRGB(50, 50, 50)
+                    shadow.Transparency = 0.5
+                    shadow.Parent = textLabel
+                end
+                return textLabel
+            end
+
+            local counter = 0
+            local isPostTenSeconds = false
+
+            local function changeTextColor(textLabel)
+                local colors = {Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 0, 255),
+                                Color3.fromRGB(255, 255, 0), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 0, 255)}
+                while deathreturnactive do
+                    for _, color in ipairs(colors) do
+                        textLabel.TextColor3 = color
+                        wait(0.1)
+                    end
+                end
+            end
+
+            local function updateCounter(textLabel)
+                while deathreturnactive do
+                    if not isPostTenSeconds then
+                        wait(1)
+                        counter = counter + 1
+                        textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
+                    else
+                        wait(1)
+                        local randomIncrement = math.random(1, 4) -- Düzeltildi
+                        counter = counter + randomIncrement
+                        textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
+                    end
+                end
+            end
+
+            spawn(function()
+                wait(10)
+                isPostTenSeconds = true
+            end)
+
+            local function updateLastLocation()
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    lastlocation = player.Character.HumanoidRootPart.Position
+                end
+            end
+
+            local function onCharacterAdded(character)
+                local humanoid = character:WaitForChild("Humanoid")
+                humanoid.Died:Connect(function()
+                    wait(0.5)
+                    local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
+                    if remoteEvent then
+                        remoteEvent:FireServer({[1] = "Respawn"})
+                    end
+                    wait(1)
+                    game.Lighting.Blur.Enabled = false
+                    game.Players.LocalPlayer.PlayerGui.IntroGui.Enabled = false
+                    repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                    if deathreturnactive and lastlocation then
+                        while true do
+                            wait(2)
+                            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                                local humanoid = player.Character:FindFirstChild("Humanoid")
+                                if humanoid and humanoid.Health > 0 then
+                                    humanoid.Health = 0
+                                end
+                            end
+                            wait(1)
+                            repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                            if player.Character then
+                                player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
+                            end
+                        end
+                    end
+                end)
+            end
+
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+
+            player.CharacterAdded:Connect(onCharacterAdded)
+
+            spawn(function()
+                while true do
+                    updateLastLocation()
+                    wait(5)
+                end
+            end)
+
+            local screenGui = getOrCreateScreenGui()
+            local textLabel = getOrCreateTextLabel(screenGui)
+
+            if deathreturnactive then
+                spawn(function()
+                    changeTextColor(textLabel)
+                end)
+                spawn(function()
+                    updateCounter(textLabel)
+                end)
+            end
+        end,
