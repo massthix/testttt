@@ -60,7 +60,7 @@ local function changeTextColor(textLabel)
     while deathreturnactive do
         for _, color in ipairs(colors) do
             textLabel.TextColor3 = color
-            wait(0.1)
+            wait(10)
         end
     end
 end
