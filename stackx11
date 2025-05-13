@@ -19,12 +19,12 @@ local function getOrCreateTextLabel(screenGui)
         textLabel = Instance.new("TextLabel")
         textLabel.Name = "StackXLabel"
         textLabel.Parent = screenGui
-        textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n0"
+        textLabel.Text = "\nStackX ON!!\n0"
         textLabel.TextSize = 50
         textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         textLabel.BackgroundTransparency = 1
         textLabel.Position = UDim2.new(0.5, -200, 0.5, -50)
-        textLabel.Size = UDim2.new(0, 400, 0, 200)
+        textLabel.Size = UDim2.new(0, 100, 0, 50)
         textLabel.TextScaled = true
         textLabel.TextStrokeTransparency = 0.5
         textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -70,12 +70,12 @@ local function updateCounter(textLabel)
         if not isPostTenSeconds then
             wait(2)
             counter = counter + 1
-            textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
+            textLabel.Text = "\nStackX ON!!\n" .. counter
         else
             wait(2)
             local randomIncrement = math.random(1, 4)
             counter = counter + randomIncrement
-            textLabel.Text = "If it doesn't work, respawn once\nStackX ON!!\n" .. counter
+            textLabel.Text = "\nStackX ON!!\n" .. counter
         end
     end
 end
