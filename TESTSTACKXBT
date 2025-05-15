@@ -1,0 +1,275 @@
+
+_G.cum = true
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+local deathreturnactive = true
+
+-- Statik args tabloları
+local argsInitial = { [1] = { [1] = "Body", [2] = "Body2" } }
+local argsBT32 = { [1] = { [1] = "+BT32" } }
+local argsEmpty = { [1] = { [1] = "" } }
+local argsStop = { [1] = { [1] = "", [2] = "" } }
+
+-- FireServer için debounce
+local lastFire = 0
+local DEBOUNCE_TIME = 0.002 -- 2ms, maksimum hız için
+
+-- Yeni FireServer fonksiyonu (coroutine ile asenkron çalıştırma)
+local function safeFireEvent(args)
+    if tick() - lastFire < DEBOUNCE_TIME then return end
+    lastFire = tick()
+    coroutine.wrap(function()
+        local success, err = pcall(function()
+            RemoteEvent:FireServer(unpack(args))
+        end)
+        if not success then
+            warn("FireServer hatası: " .. tostring(err))
+        end
+    end)()
+end
+
+-- İlk işlem
+safeFireEvent(argsInitial)
+
+-- Hızlı FireServer döngüsü (karakterden bağımsız, ölümden etkilenmeyecek)
+local activeLoops = 0
+local MAX_LOOPS = 5
+
+local function createFastLoop()
+    if activeLoops >= MAX_LOOPS then return end
+    activeLoops = activeLoops + 1
+    task.spawn(function()
+        while _G.cum do
+            safeFireEvent(argsBT32)
+            safeFireEvent(argsEmpty)
+            RunService.Heartbeat:Wait()
+        end
+        activeLoops = activeLoops - 1
+    end)
+end
+
+-- Ekstra RenderStepped döngüsü
+RunService.RenderStepped:Connect(function()
+    if not _G.cum then return end
+    safeFireEvent(argsBT32)
+    safeFireEvent(argsEmpty)
+end)
+
+-- Döngü durdurulduğunda son işlem
+task.spawn(function()
+    while _G.cum do
+        RunService.Heartbeat:Wait()
+    end
+    safeFireEvent(argsStop)
+end)
+
+-- StackX GUI ve counter
+local function getOrCreateScreenGui()
+    local screenGui = player.PlayerGui:FindFirstChild("StackXScreenGui")
+    if not screenGui then
+        screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "StackXScreenGui"
+        screenGui.Parent = player.PlayerGui
+        screenGui.ResetOnSpawn = false
+    end
+    return screenGui
+end
+
+local function getOrCreateTextLabel(screenGui)
+    local textLabel = screenGui:FindFirstChild("StackXLabel")
+    if not textLabel then
+        textLabel = Instance.new("TextLabel")
+        textLabel.Name = "StackXLabel"
+        textLabel.Parent = screenGui
+        textLabel.Text = "StackX ON!!\n0"
+        textLabel.TextSize = 40
+        textLabel.TextColor3 = Color3.fromRGB(150, 200, 255)
+        textLabel.BackgroundTransparency = 1
+        textLabel.Size = UDim2.new(0, 300, 0, 40)
+        textLabel.Position = UDim2.new(0.5, 0, 0, 20)
+        textLabel.AnchorPoint = Vector2.new(0.5, 0)
+        textLabel.TextScaled = true
+        textLabel.TextStrokeTransparency = 0.8
+        textLabel.TextStrokeColor3 = Color3.fromRGB(30, 30, 30)
+        textLabel.Font = Enum.Font.Gotham
+
+        local uiStroke = Instance.new("UIStroke")
+        uiStroke.Thickness = 1
+        uiStroke.Color = Color3.fromRGB(50, 50, 50)
+        uiStroke.Transparency = 0.5
+        uiStroke.Parent = textLabel
+    end
+
+    local waitingLabel = screenGui:FindFirstChild("WaitingLabel")
+    if not waitingLabel then
+        waitingLabel = Instance.new("TextLabel")
+        waitingLabel.Name = "WaitingLabel"
+        waitingLabel.Parent = screenGui
+        waitingLabel.Text = "Waiting..."
+        waitingLabel.TextSize = 30
+        waitingLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        waitingLabel.BackgroundTransparency = 1
+        waitingLabel.Size = UDim2.new(0, 300, 0, 30)
+        waitingLabel.Position = UDim2.new(0.5, 0, 0, 65)
+        waitingLabel.AnchorPoint = Vector2.new(0.5, 0)
+        waitingLabel.TextScaled = true
+        waitingLabel.Font = Enum.Font.Gotham
+        waitingLabel.Visible = false
+    end
+
+    return textLabel, waitingLabel
+end
+
+local counter = 0
+
+local function changeTextColor(textLabel)
+    local hue = 0
+    while deathreturnactive do
+        hue = (hue + 0.005) % 1
+        local color = Color3.fromHSV(hue, 0.6, 1)
+        textLabel.TextColor3 = color
+        RunService.RenderStepped:Wait()
+    end
+end
+
+local function updateCounter(textLabel)
+    while deathreturnactive do
+        wait(2)
+        counter = counter + 1
+        textLabel.Text = "StackX ON!!\n" .. counter
+    end
+end
+
+local lastlocation = nil
+
+local function updateLastLocation()
+    local success, err = pcall(function()
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            lastlocation = player.Character.HumanoidRootPart.Position
+        end
+    end)
+    if not success then
+        warn("Konum güncelleme hatası: " .. tostring(err))
+    end
+end
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if not humanoid then
+        warn("Humanoid bulunamadı!")
+        return
+    end
+
+    createFastLoop()
+
+    humanoid.Died:Connect(function()
+        local success, err = pcall(function()
+            wait(1.5)
+            local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
+            if remoteEvent then
+                remoteEvent:FireServer({[1] = "Respawn"})
+            end
+            wait(1)
+            game.Lighting.Blur.Enabled = false
+            game.Players.LocalPlayer.PlayerGui.IntroGui.Enabled = false
+            repeat wait(0.5) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            if deathreturnactive and lastlocation then
+                player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
+            end
+        end)
+        if not success then
+            warn("Respawn hatası: " .. tostring(err))
+        end
+    end)
+end
+
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+player.CharacterAdded:Connect(onCharacterAdded)
+
+spawn(function()
+    while true do
+        updateLastLocation()
+        wait(10)
+    end
+end)
+
+local screenGui = getOrCreateScreenGui()
+local textLabel, waitingLabel = getOrCreateTextLabel(screenGui)
+
+if deathreturnactive then
+    spawn(function()
+        changeTextColor(textLabel)
+    end)
+    spawn(function()
+        updateCounter(textLabel)
+    end)
+end
+
+createFastLoop()
+
+local function killCharacter()
+    local success, err = pcall(function()
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            local humanoid = player.Character.Humanoid
+            if humanoid.Health > 0 then
+                humanoid.Health = 0
+            end
+        end
+    end)
+    if not success then
+        warn("Karakter öldürme hatası: " .. tostring(err))
+    end
+end
+
+local function startKillCycle()
+    while _G.cum and deathreturnactive do
+        if waitingLabel then
+            waitingLabel.Text = "Waiting..."
+            waitingLabel.Visible = true
+        end
+
+        local startTime = tick()
+        while tick() - startTime < 60 do
+            killCharacter()
+            wait(0.1)
+        end
+
+        if waitingLabel then
+            waitingLabel.Text = "Stacked.."
+            waitingLabel.Visible = true
+        end
+
+        wait(150)
+
+        if waitingLabel then
+            waitingLabel.Visible = false
+        end
+
+        if waitingLabel then
+            waitingLabel.Text = "Waiting..."
+            waitingLabel.Visible = true
+        end
+
+        startTime = tick()
+        while tick() - startTime < 60 do
+            killCharacter()
+            wait(0.1)
+        end
+
+        if waitingLabel then
+            waitingLabel.Text = "Stacked.."
+            waitingLabel.Visible = true
+        end
+
+        wait(150)
+    end
+end
+
+
+spawn(startKillCycle)
