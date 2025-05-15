@@ -1,7 +1,69 @@
-local deathreturnactive = true -- Tekrar eden tanımlama kaldırıldı
-local player = game:GetService("Players").LocalPlayer
-local lastlocation = nil
+_G.cum = true
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+local deathreturnactive = true
 
+-- Statik args tabloları
+local argsInitial = { [1] = { [1] = "Body", [2] = "Body2" } }
+local argsBT32 = { [1] = { [1] = "+BT32" } }
+local argsEmpty = { [1] = { [1] = "" } }
+local argsStop = { [1] = { [1] = "", [2] = "" } }
+local argsRespawn = { [1] = "Respawn" }
+
+-- FireServer için debounce
+local lastFire = 0
+local DEBOUNCE_TIME = 0.01 -- 10ms, stabilite için
+
+local function fireEvent(args)
+    if tick() - lastFire < DEBOUNCE_TIME then return end
+    lastFire = tick()
+    local success, err = pcall(function()
+        RemoteEvent:FireServer(unpack(args))
+    end)
+    if not success then
+        warn("FireServer hatası: " .. tostring(err))
+    end
+end
+
+-- İlk işlem
+fireEvent(argsInitial)
+
+-- Hızlı FireServer döngüsü (karakterden bağımsız)
+local activeLoops = 0
+local MAX_LOOPS = 5 -- Maksimum paralel döngü sayısı (crash önlemek için)
+
+local function createFastLoop()
+    if activeLoops >= MAX_LOOPS then return end
+    activeLoops = activeLoops + 1
+    task.spawn(function()
+        while _G.cum do
+            fireEvent(argsBT32)
+            fireEvent(argsEmpty)
+            RunService.Heartbeat:Wait() -- Hafif gecikme, stabilite için
+        end
+        activeLoops = activeLoops - 1
+    end)
+end
+
+-- RenderStepped ile ek hız (karakterden bağımsız)
+RunService.RenderStepped:Connect(function()
+    if not _G.cum then return end
+    fireEvent(argsBT32)
+    fireEvent(argsEmpty)
+end)
+
+-- Döngü durdurulduğunda son işlem
+task.spawn(function()
+    while _G.cum do
+        RunService.Heartbeat:Wait()
+    end
+    fireEvent(argsStop)
+end)
+
+-- StackX GUI ve counter
 local function getOrCreateScreenGui()
     local screenGui = player.PlayerGui:FindFirstChild("StackXScreenGui")
     if not screenGui then
@@ -28,7 +90,7 @@ local function getOrCreateTextLabel(screenGui)
         textLabel.TextScaled = true
         textLabel.TextStrokeTransparency = 0.5
         textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        textLabel.Font = Enum.Font.Sarpanch  -- <== BURASI GÜNCELLENDİ
+        textLabel.Font = Enum.Font.Sarpanch
 
         local uiStroke = Instance.new("UIStroke")
         uiStroke.Thickness = 2
@@ -50,17 +112,13 @@ local isPostTenSeconds = false
 
 local function changeTextColor(textLabel)
     local colors = {
-        Color3.fromRGB(255, 0, 0),
-        Color3.fromRGB(0, 255, 0),
-        Color3.fromRGB(0, 0, 255),
-        Color3.fromRGB(255, 255, 0),
-        Color3.fromRGB(0, 255, 255),
-        Color3.fromRGB(255, 0, 255)
+        Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 0, 255),
+        Color3.fromRGB(255, 255, 0), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 0, 255)
     }
     while deathreturnactive do
         for _, color in ipairs(colors) do
             textLabel.TextColor3 = color
-            wait(10)
+            task.wait(10)
         end
     end
 end
@@ -68,22 +126,23 @@ end
 local function updateCounter(textLabel)
     while deathreturnactive do
         if not isPostTenSeconds then
-            wait(2)
+            task.wait(2)
             counter = counter + 1
-            textLabel.Text = "\nStackX ON!!\n" .. counter
         else
-            wait(2)
-            local randomIncrement = math.random(1, 4)
-            counter = counter + randomIncrement
-            textLabel.Text = "\nStackX ON!!\n" .. counter
+            task.wait(2)
+            counter = counter + math.random(1, 4)
         end
+        textLabel.Text = "\nStackX ON!!\n" .. counter
     end
 end
 
-spawn(function()
-    wait(10)
+task.spawn(function()
+    task.wait(10)
     isPostTenSeconds = true
 end)
+
+-- Respawn ve stackleme
+local lastlocation = nil
 
 local function updateLastLocation()
     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -93,56 +152,62 @@ end
 
 local function onCharacterAdded(character)
     local humanoid = character:WaitForChild("Humanoid")
+    
+    -- Yeni FireServer döngüsü başlat (stackleme için)
+    createFastLoop()
+    
     humanoid.Died:Connect(function()
-        wait(1.5)
-        local remoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("RemoteEvent")
-        if remoteEvent then
-            remoteEvent:FireServer({[1] = "Respawn"})
-        end
-        wait(1)
+        -- Hızlı respawn
+        fireEvent(argsRespawn)
+        
+        -- Karakterin yeniden yüklenmesini bekle
+        repeat task.wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
+        -- GUI ve efektleri kapat
         game.Lighting.Blur.Enabled = false
-        game.Players.LocalPlayer.PlayerGui.IntroGui.Enabled = false
-        repeat wait(0.1) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        if deathreturnactive and lastlocation then
-            while true do
-                wait(3)
-                if player.Character and player.Character:FindFirstChild("Humanoid") then
-                    local humanoid = player.Character:FindFirstChild("Humanoid")
-                    if humanoid and humanoid.Health > 0 then
-                        humanoid.Health = 0
-                    end
-                end
-                wait(2)
-                repeat wait(0.5) until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                if player.Character then
-                    player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
-                end
-            end
+        player.PlayerGui:FindFirstChild("IntroGui", true).Enabled = false
+        
+        -- Konumu geri yükle
+        if lastlocation then
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(lastlocation)
         end
     end)
 end
 
-if player.Character then
-    onCharacterAdded(player.Character)
-end
-
-player.CharacterAdded:Connect(onCharacterAdded)
-
-spawn(function()
-    while true do
-        updateLastLocation()
-        wait(10)
+-- Otomatik ölüm döngüsü
+task.spawn(function()
+    while deathreturnactive do
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            local humanoid = player.Character.Humanoid
+            if humanoid.Health > 0 then
+                humanoid.Health = 0 -- 3 saniyede bir öldür
+            end
+        end
+        task.wait(3) -- Ölüm sıklığını ayarla
     end
 end)
 
+-- Karakter ve konum takibi
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+player.CharacterAdded:Connect(onCharacterAdded)
+
+task.spawn(function()
+    while true do
+        updateLastLocation()
+        task.wait(10)
+    end
+end)
+
+-- GUI başlat
 local screenGui = getOrCreateScreenGui()
 local textLabel = getOrCreateTextLabel(screenGui)
 
 if deathreturnactive then
-    spawn(function()
-        changeTextColor(textLabel)
-    end)
-    spawn(function()
-        updateCounter(textLabel)
-    end)
+    task.spawn(function() changeTextColor(textLabel) end)
+    task.spawn(function() updateCounter(textLabel) end)
 end
+
+-- İlk döngüyü başlat
+createFastLoop()
